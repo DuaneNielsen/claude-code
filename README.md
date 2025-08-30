@@ -76,6 +76,44 @@ devcontainer up --workspace-folder .
 # Press Ctrl+Shift+P and select "Dev Containers: Rebuild Container"
 ```
 
+### Data Persistence in Devcontainers
+
+The devcontainer uses Docker volumes to persist important data between container restarts:
+
+#### What Persists
+- **Claude Code authentication and credentials** - stored in `/home/node/.claude/`
+- **Shell command history** - stored in `/commandhistory/`
+- **Project settings and configurations** - your Claude Code settings persist
+
+#### How It Works
+The devcontainer configuration creates persistent Docker volumes:
+```json
+"mounts": [
+  "source=claude-code-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+  "source=claude-code-config-${devcontainerId},target=/home/node/.claude,type=volume"
+]
+```
+
+#### Volume Management
+- **devcontainerId** is generated based on your project path and config
+- Volumes survive container deletion and Docker Desktop restarts
+- Each project gets isolated persistent storage
+
+**Manual volume management:**
+```bash
+# List all Claude Code volumes
+docker volume ls | grep claude-code
+
+# Remove volumes (will lose all persistent data!)
+docker volume rm claude-code-config-abc123def456
+
+# Remove all unused volumes
+docker volume prune
+```
+
+#### Security Note
+Your Claude Code API keys and authentication tokens are stored in the persistent Docker volume at `/home/node/.claude/.credentials.json`. These credentials persist between container restarts but are isolated per project.
+
 ## Reporting Bugs
 
 We welcome your feedback. Use the `/bug` command to report issues directly within Claude Code, or file a [GitHub issue](https://github.com/anthropics/claude-code/issues).
