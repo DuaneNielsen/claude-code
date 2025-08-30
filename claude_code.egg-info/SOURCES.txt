@@ -1,0 +1,8 @@
+LICENSE.md
+README.md
+pyproject.toml
+claude_code.egg-info/PKG-INFO
+claude_code.egg-info/SOURCES.txt
+claude_code.egg-info/dependency_links.txt
+claude_code.egg-info/requires.txt
+claude_code.egg-info/top_level.txt
